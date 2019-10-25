@@ -215,6 +215,13 @@
         return 150000000; // ns
     }
 
+    function getDefaultFetchMaxWait() {
+        // Routes are arguably improving:
+        //   http://research.google.com/pubs/pub35590.html
+        // Speed of light is ultimately fundamental
+        return 500000000; // ns
+    }
+
     // Display functions:
     function drawBoxes(n, div, color) {
         var cw = 100;
@@ -377,8 +384,10 @@
         var mbDisk = new Metric(getDiskTransmissionDelay(getPayloadBytes()), "ms",
                                 "Read " + addCommas(getPayloadBytes()) + " bytes sequentially from disk: ", "mbDisk");
         var wan = new Metric(getWanRTT(), "ms", "Packet roundtrip CA to Netherlands: ", "wan");
+        // fetch.max.wait.ms
+        var fetchMax = new Metric(getDefaultFetchMaxWait(), "ms", "default fetch.max.wait.ms: ", "fetchMax");
         var metrics = new Array(ns,L1,branch,L2,mutex,ns100,mem,micro,snappy,tenMicro,network,
-                               ssdRandom,mbMem,rtt,ms,mbSSD,seek,mbDisk,wan);
+                               ssdRandom,mbMem,rtt,ms,mbSSD,seek,mbDisk,wan, fetchMax);
         return metrics;
     }
 
@@ -558,6 +567,13 @@
           <div class="row-fluid">
               <div class="span4" id="wan"></div>
               <div class="span8" id="want"></div>
+          </div>
+          <div class="row-fluid">
+              <div class="span12"></div>
+          </div>
+          <div class="row-fluid">
+              <div class="span4" id="fetchMax"></div>
+              <div class="span8" id="fetchMaxt"></div>
           </div>
         </div><!--Fourth Column-->
       </div><!-- row-fluid -->
