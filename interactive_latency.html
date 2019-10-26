@@ -176,6 +176,12 @@
         return 594200; // ns
     }
 
+
+    function getTypicalLogFlushTime() {
+        // https://www.signalfx.com/blog/how-we-monitor-and-run-kafka-at-scale/
+        return 3000000;
+    }
+
     function getZookeeperAvgLatencyMixedReadWriteLocal() {
         // Routes are arguably improving:
         //   http://research.google.com/pubs/pub35590.html
@@ -369,6 +375,8 @@
                                 "Read " + addCommas(getPayloadBytes()) + " bytes sequentially from memory: ", "mbMem");
         var rtt = new Metric(getDCRTT(), "10us", "Round trip in same datacenter: ", "rtt");
         var kafka_1KB_repl1_latency_99pct = new Metric(getKafka1KBRepl1LatencyAt99Percent(), "10us", "Kafka 1KB msg, replication=1, 99% Latency: ", "k1kbrepl199pct");
+        
+        var typicalLogFlushTime = new Metric(getTypicalLogFlushTime(), "ms", "Typical log flush time (log.flush.interval.ms) : ", "logFlushTime");
         var kafka_1KB_repl1_latency_99_9999pct = new Metric(getKafka1KBRepl1LatencyAt99_9999Percent(), "ms", "Kafka 1KB msg, replication=1, 99.9999% Latency: ", "k1kbrepl199_9999pct");
         var zookeeper_avg_mixedRW_Local = new Metric(getZookeeperAvgLatencyMixedReadWriteLocal(), "ms", "Zookeeper, mixed Read/Write, Local Avg Latency: ", "zk_avg_mixedRW_local");
         var zookeeper_99_9_mixedRW_Local = new Metric(getZookeeper99_9LatencyMixedReadWriteLocal(), "ms", "Zookeeper, mixed Read/Write, Local 99.9 Latency: ", "zk_99_9_mixedRW_local");
@@ -384,7 +392,7 @@
         var fetchMax = new Metric(getDefaultFetchMaxWait(), "ms", "default fetch.max.wait.ms: ", "fetchMax");
         var metrics = new Array(ns,L1,branch,L2,mutex,ns100,mem,micro,snappy,tenMicro,network,
                                ssdRandom,mbMem,rtt,ms,mbSSD,seek,mbDisk,wan, kafka_1KB_repl1_latency_99pct, kafka_1KB_repl1_latency_99_9999pct,
-                               zookeeper_avg_mixedRW_Local, zookeeper_99_9_mixedRW_Local, fetchMax);
+                               zookeeper_avg_mixedRW_Local, zookeeper_99_9_mixedRW_Local, typicalLogFlushTime, fetchMax);
         return metrics;
     }
 
@@ -564,6 +572,13 @@
           <div class="row-fluid">
               <div class="span4" id="mbDisk"></div>
               <div class="span8" id="mbDiskt"></div>
+          </div>
+          <div class="row-fluid">
+              <div class="span12"></div>
+          </div>
+          <div class="row-fluid">
+              <div class="span4" id="logFlushTime"></div>
+              <div class="span8" id="logFlushTimet"></div>
           </div>
           <div class="row-fluid">
               <div class="span12"></div>
